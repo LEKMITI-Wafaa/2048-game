@@ -1,0 +1,19 @@
+
+body {
+    background-color: #faf8ef;
+}
+table {
+    background-color: #776e65;
+    border-radius: 5px;
+    margin: 50px auto;
+
+}
+
+td {
+    width: 5em;
+    height: 5em;
+    background-color: rgba(238, 228, 218, 0.35);
+    text-align: center;
+    border-radius: 5px;
+
+}
