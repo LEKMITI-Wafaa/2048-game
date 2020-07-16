@@ -5,32 +5,23 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <table id="grid" cellspacing=5>
-         <!-- <tr id="rowOne">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="rowTwo">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="rowThree">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="rowfour"> 
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr> -->
-     </table>
+    <div id="game-board">
+        <div id="head-grid">
+            <h1>2048</h2>
+            <div id="score-replay">
+                <div id="score">
+                    <p id="p-score">score</p>
+                    <p id="p-number">0</p>
+                </div>
+                <img id = "img-replay" src="./ressources/replay.svg" alt="replay">
+    
+            </div>
+            
+            
+        </div>
+        <table id="grid" cellspacing=5></table>
+    </div>
+    
      <script type="text/javascript" src="index.js"></script>
 
 </body>

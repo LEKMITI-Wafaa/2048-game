@@ -3,17 +3,78 @@ body {
     background-color: #faf8ef;
 }
 table {
-    background-color: #776e65;
+    background-color: hsl(28, 7%, 54%);
     border-radius: 5px;
-    margin: 50px auto;
-
 }
 
 td {
     width: 5em;
     height: 5em;
-    background-color: rgba(238, 228, 218, 0.35);
+    background-color: rgba(238, 228, 218, 0.7);
     text-align: center;
+    border-radius: 5px;
+}
+#game-board {
+margin-top: 50px auto;
+display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
+justify-content: space-around;
+align-items: center;
+}
+
+#head-grid {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    width: 350px;
+    
+}
+#head-grid  h1{
+   color: hsl(28, 9%, 39%);
+   font-size: 40px;
+}
+   
+
+
+#img-replay {
+    width: 35px;
+    height: 35px;
+    background-color: #8f7a65;
+    margin-left: 10px;
+    padding: 10px;
     border-radius: 5px;
 
 }
+
+#score-replay {
+    display: flex;
+    align-items: center;
+
+}
+#score {
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+#p-number {
+    font-weight:bold ;
+    color: #ffffff;
+    margin: 5px;
+}
+
+#p-score {
+    font-weight:bold ;
+    font-size: 20px;
+    color: #eee4da;
+    margin: 5px;
+}
+
+
+#score-replay div{
+    background-color: #bbada0;
+}
+
+
+
