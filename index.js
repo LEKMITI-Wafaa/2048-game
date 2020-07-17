@@ -1,5 +1,25 @@
+
 let gridSize = 4;
 let grid;
+let isGameOver = false;
+let isWon = false;
+
+const styleByNumber = new Map([
+    [2, {backgroundColor:'#eee4da', color:'#776d64'}],
+    [4, {backgroundColor:'#ede0c8', color:'#776d64'}],
+    [8, {backgroundColor:'#f2b179', color:'#f9f6f2'}],
+    [16, {backgroundColor:'#f09462', color:'#f9f6f2'}],
+    [32, {backgroundColor:'#ed7b5e', color:'#f9f6f2'}],
+    [64, {backgroundColor:'#e84c24', color:'#f9f6f2'}],
+    [128, {backgroundColor:'#f4d066', color:'#f9f6f2'}],
+    [256, {backgroundColor:'#f2c747', color:'#f9f6f2'}],
+    [512, {backgroundColor:'#ecbd32', color:'#f9f6f2'}],
+    [1024, {backgroundColor:'#ba591f', color:'#f9f6f2'}],
+    [2048, {backgroundColor:'#9a5315', color:'#f9f6f2'}],
+    [undefined, {backgroundColor:'#cec1b4', color:'#f9f6f2'}],
+]);
+
+
 const $grid = document.getElementById('grid');
 
 
@@ -30,24 +50,53 @@ const initGame = () => {
          y2 = randomIntFromInterval(0, gridSize - 1);
     }
     grid[x2][y2] = 2;  
+};
+
+const randomIntFromInterval = (min, max) => {  
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-const randomIntFromInterval = (min, max) => { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
 
-  const renderGridState = () => {
+const renderGridState = () => {
       for (let i = 0; i < gridSize ; i++){
         const $row = $grid.querySelectorAll(".grid-row")[i];
         for (let j = 0; j < gridSize; j++){
             const $cell = $row.querySelectorAll(".grid-data")[j];
             $cell.innerHTML = grid[i][j] ?  grid[i][j] : '';
+            $cell.style.backgroundColor = styleByNumber.get(grid[i][j]).backgroundColor;
+            $cell.style.color = styleByNumber.get(grid[i][j]).color;
         }
       }
-  }
+}
 
+document.addEventListener('keydown', (event) => {
+    const keyName = event.key
+    switch(keyName) {
+        case 'ArrowUp': moveUp(); break;
+        case 'ArrowDown': moveDown(); break;
+        case 'ArrowLeft': moveLeft(); break;
+        case 'ArrowRight': moveRight(); break;
+    }      
 
+})   
 
-  generateGrid();
-  initGame();
-  renderGridState();
+const moveUp = () => {
+    console.log("moveUp")
+}
+
+const moveDown = () => {
+    console.log("moveDown")
+}
+
+const moveLeft = () => {
+    console.log("moveLeft")
+}
+
+const moveRight = () => {
+    console.log("moveRight")
+}
+
+generateGrid();
+initGame();
+renderGridState();
+
