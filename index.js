@@ -131,7 +131,7 @@ const moveUp = () => {
 const moveDown = () => {
     
    for (let j = 0; j < gridSize; j++){ // parcourir la grille verticallement
-        let f = gridSize-1;  // represente le plus grand plafond dans la recherche du nombre similaire. Le f augmente des qu'une premiere operation est faite pour ne pas mélanger deux opérations
+        let f = gridSize-1;  // represente le plus grand plafond dans la recherche du nombre similaire. Le f diminue des qu'une premiere operation est faite pour ne pas mélanger deux opérations
         for (let i = gridSize-2; i >= 0; i--){ // parcourir une colonne 
             if (grid[i][j]) { 
                 for (let k = i + 1; k <= f ; k++){   // chercher le nombre similaire vers le haut de la meme colonne, en partant de la case juste en dessous du nombre actuel
@@ -163,7 +163,7 @@ const moveDown = () => {
 
 const moveRight = () => {
     for (let i = 0; i < gridSize; i++){ // parcourir la grille horizontallement
-        let f = gridSize-1;  // represente le plus  grand plafond dans la recherche du nombre similaire. Le f augmente des qu'une premiere operation est faite pour ne pas mélanger deux opérations
+        let f = gridSize-1;  // represente le plus  grand plafond dans la recherche du nombre similaire. Le f diminue dès qu'une premiere operation est faite pour ne pas mélanger deux opérations
         for (let j = gridSize - 2; j >= 0; j--){ // parcourir une ligne (gridSize -2 car on commence à partir de l'avant dernière case)
             if (grid[i][j]) { 
                 for (let k = j + 1; k <= f ; k++){   // chercher le nombre similaire vers la droite de la meme ligne, en partant de la case juste à droite du nombre actuel
@@ -194,7 +194,35 @@ const moveRight = () => {
 }
 
 const moveLeft = () => {
-    console.log("moveLeft")
+    for (let i = 0; i < gridSize; i++){ // parcourir la grille horizontallement
+        let f = 0;  // represente le plus  petit plafond dans la recherche du nombre similaire. Le f augmente dès qu'une premiere operation est faite pour ne pas mélanger deux opérations
+        for (let j = 1; j <=gridSize - 1; j++){ // parcourir une ligne (gridSize -1 car on commence à partir de l'avant dernière case)
+            if (grid[i][j]) { 
+                for (let k = j - 1; k >= f ; k--){   // chercher le nombre similaire vers la gauche de la meme ligne, en partant de la case juste à gauche du nombre actuel
+                    if (grid[i][j] === grid[i][k]){  // Cas 01:  le cas où on trouve un nombre similaire à gauche
+                        grid[i][k] =  grid[i][k]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        f = k + 1;                   //          la valeur trouvée n'est plus concernée par la recherche. 
+                        grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'elle a bougé
+                        break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
+                   
+                    } else if (grid[i][k]){          // Cas 01: le cas où on  trouve à gauche un nombre non-similaire mais qui est défini 
+                        grid[i][k+1] = grid[i][j]    //         bascule vers la gauche le nombre actuel juste avant le nombre non-similaire trouvé
+                        if(k+1 !== j){               //         traiter le cas où le nombre actuel ne bascule pas vers la gauche  (car le nombre non-similaire trouvé le suis directement à gauche), dans ce cas il ne faut pas le mettre à undefined
+                            grid[i][j] = undefined;  //         si le nombre actuel bascule vers la droite : le mettre à undefined  
+                        }
+                        break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seule action à la fois)
+                    }
+                    if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées à gauche mais aucun nombre (similaire ou pas) n'a été trouvé
+                        grid[i][k] = grid[i][j];     //         basculer vers la gauche le nombre actuel jusqu'à la dernière case possible (plus petit indice possible)
+                        grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                    }
+                }
+            }
+            
+        }
+     }
+      
+    renderGridState();
 }
 
 generateGrid();
