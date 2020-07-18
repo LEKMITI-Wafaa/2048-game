@@ -78,8 +78,7 @@ const renderGridState = () => {
         }
       }
 }
-
-document.addEventListener('keydown', (event) => {
+let onkeydown = (event) => {
     const keyName = event.key
     switch(keyName) {
         case 'ArrowUp': moveUp(); break;
@@ -87,46 +86,76 @@ document.addEventListener('keydown', (event) => {
         case 'ArrowLeft': moveLeft(); break;
         case 'ArrowRight': moveRight(); break;
     }      
-
-})   
+}
+document.addEventListener('keydown', onkeydown)   
 
 
 
 
 const moveUp = () => {
-
     for (let j = 0; j < gridSize; j++){ // parcourir la grille verticallement
-        let f = 0;  // represente le plus petit indice dans la recherche du nombre similaire. Le f augmente des qu'une premiere operation est faite pour ne pas mélanger deux opérations
+        let f = 0;  // represente le plus petit indice dans la recherche du nombre similaire. Le f augmente dès qu'une premiere opération est faite pour ne pas mélanger deux opérations
         for (let i = 1; i < gridSize; i++){ // parcourir une colonne 
+            // 2.a
             if (grid[i][j]) { 
-                for (let k = i - 1; k >= f ; k--){   // chercher le nombre similaire en haut de la meme colonne, en partant de la case juste au dessus d nombre courant
-                    if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas ou on trouve un nombre similaire au dessus
+                for (let k = i - 1; k >= f ; k--){   // chercher le nombre similaire en haut de la meme colonne, en partant de la case juste au dessus du nombre actuel
+                    if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire au dessus
                         grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
-                        f = k +1                     //          la valeur trouvé n'est plus concerné par la recherche. 
-                        grid[i][j] = undefined;      //          mettre la valeur du nombre courant à undefined vue qu'il a bougé
+                        f = k +1                     //          la valeur trouveé n'est plus concerné par la recherche. 
+                        grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'il a bougé
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
-                    } else if (grid[k][j]){          // Cas 01: le cas ou on trouve en dessus un nombre non-similaire mais qui'est défini 
-                        grid[k+1][j] = grid[i][j]    //         remonte le nombre courant just en dessous du nombre non-similaire trouvé
-                        if(k+1 !== i){               //         traiter le cas ou le nombre courant ne monte pas (car le nombre non-similaire trouvé est juste en dessus), dans ce cas il faut pas mettre le mettre à undefined
-                            grid[i][j] = undefined;  //         si le nombre courant monte , le mettre à undefined  
+                    } else if (grid[k][j]){          // Cas 01: le cas où on trouve au dessus un nombre non-similaire mais qui est défini 
+                        grid[k+1][j] = grid[i][j]    //         remonte le nombre actuel juste en dessous du nombre non-similaire trouvé
+                        if(k+1 !== i){               //         traiter le cas où le nombre actuel ne monte pas (car le nombre non-similaire trouvé est juste en dessus), dans ce cas il ne faut pasle mettre à undefined
+                            grid[i][j] = undefined;  //         si le nombre actuel monte ,  mettre sa place précédente (avant qu'il ne bouge) à undefined  
                         }
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas ou nous avons parcourru toute les cases concernées en dessus mais aucun nombre (similaire ou pas) n'a été trouvé
-                        grid[k][j] = grid[i][j];     //         monter le nombre courant vert la derniere case concernée
-                        grid[i][j] = undefined;      //         mettre le nombre courant à undefined
+                        grid[k][j] = grid[i][j];     //         monter le nombre actuel vers la dernière case concernée
+                        grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
                     }
                 }
             }
             
         }
     }
-    renderGridState();
+   renderGridState();
 }
 
+
 const moveDown = () => {
-    console.log("moveDown")
+    
+   for (let j = 0; j < gridSize; j++){ // parcourir la grille verticallement
+        let f = gridSize-1;  // represente le plus petit grand dans la recherche du nombre similaire. Le f augmente des qu'une premiere operation est faite pour ne pas mélanger deux opérations
+        for (let i = gridSize-2; i >= 0; i--){ // parcourir une colonne 
+            if (grid[i][j]) { 
+                for (let k = i + 1; k <= f ; k++){   // chercher le nombre similaire vers le haut de la meme colonne, en partant de la case juste en dessous du nombre actuel
+                    if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire en dessous
+                        grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        f = k -1                     //          la valeur trouvé n'est plus concerné par la recherche. 
+                        grid[i][j] = undefined;      //          mettre la valeur du nombre courant à undefined vue qu'il a bougé
+                        break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
+                   
+                    } else if (grid[k][j]){          // Cas 01: le cas où on  trouve en dessous un nombre non-similaire mais qui est défini 
+                        grid[k-1][j] = grid[i][j]    //         descends le nombre actuel juste au dessus du nombre non-similaire trouvé
+                        if(k-1 !== i){               //         traiter le cas où le nombre actuel ne descend pas (car le nombre non-similaire trouvé est juste en dessus), dans ce cas il ne faut pas le mettre à undefined
+                            grid[i][j] = undefined;  //         si le nombre actuel descend , le mettre à undefined  
+                        }
+                        break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seul action à la fois)
+                    }
+                    if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées en dessous mais aucun nombre (similaire ou pas) n'a été trouvé
+                        grid[k][j] = grid[i][j];     //         descendre le nombre actuel vers la dernière case concernée (de la boucle)
+                        grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                    }
+                }
+            }
+            
+        }
+     }
+      
+    renderGridState();
 }
 
 const moveLeft = () => {
