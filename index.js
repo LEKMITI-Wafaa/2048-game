@@ -1,9 +1,10 @@
 
-let gridSize = 4;
+let gridSize = 3;
 let grid;
 let isGameOver = false;
 let isWon = false;
-
+const defaultCellBackgroundColor = '#cec1b4';
+const defaultCellTextColor = '#cec1b4';
 const styleByNumber = new Map([
     [2, {backgroundColor:'#eee4da', color:'#776d64'}],
     [4, {backgroundColor:'#ede0c8', color:'#776d64'}],
@@ -16,7 +17,7 @@ const styleByNumber = new Map([
     [512, {backgroundColor:'#ecbd32', color:'#f9f6f2'}],
     [1024, {backgroundColor:'#ba591f', color:'#f9f6f2'}],
     [2048, {backgroundColor:'#9a5315', color:'#f9f6f2'}],
-    [undefined, {backgroundColor:'#cec1b4', color:'#f9f6f2'}],
+    [undefined, {backgroundColor: defaultCellBackgroundColor, color: defaultCellTextColor}],
 ]);
 
 
@@ -38,32 +39,33 @@ const generateGrid = () => {
 
 const initGame = () => {
     grid = Array.from(Array(gridSize), () => new Array(gridSize))
-    let x1 = randomIntFromInterval(0, gridSize - 1);
-    let y1 = randomIntFromInterval(0, gridSize - 1);  
-    grid[x1][y1] = 2;
 
-    let x2 = randomIntFromInterval(0, gridSize - 1);
-    let y2 = randomIntFromInterval(0, gridSize - 1);
+    const point1 = generateRandomCordinates();
+    grid[point1.x][point1.y] = 2;
 
-    while(x1 === x2 && y1 === y2){
-         x2 = randomIntFromInterval(0, gridSize - 1);
-         y2 = randomIntFromInterval(0, gridSize - 1);
+    let point2 = generateRandomCordinates();
+    while(JSON.stringify(point1) === JSON.stringify(point2)){
+        point2 = generateRandomCordinates();
     }
-   grid[x2][y2] = 2;
+    grid[point2.x][point2.y] = 2;
 
-    grid[0][1] = 4;   
-    grid[1][1] = 4;  
-    grid[2][1] = 8;  
-    grid[3][1] = 8; 
-
-    grid[0][2] = 8;   
-    grid[1][2] = 4;  
-    grid[2][2] = 2;  
-    grid[3][2] = 2; 
-    
-    
-
+    renderGridState();
+  
 };
+
+const generateRandomCordinates = () => {
+    let x = randomIntFromInterval(0, gridSize - 1);
+    let y = randomIntFromInterval(0, gridSize - 1);  
+    return {x : x, y: y};
+}
+
+const addNewValueOfTwo = () => {
+    let point = generateRandomCordinates();
+    while(grid[point.x][point.y]) {
+        point = generateRandomCordinates();
+    }
+    grid[point.x][point.y] = 2;
+}
 
 const randomIntFromInterval = (min, max) => {  
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -76,11 +78,12 @@ const renderGridState = () => {
         for (let j = 0; j < gridSize; j++){
             const $cell = $row.querySelectorAll(".grid-data")[j];
             $cell.innerHTML = grid[i][j] ?  grid[i][j] : '';
-            $cell.style.backgroundColor = styleByNumber.get(grid[i][j]).backgroundColor;
-            $cell.style.color = styleByNumber.get(grid[i][j]).color;
+            $cell.style.backgroundColor = styleByNumber.get(grid[i][j]).backgroundColor || defaultCellBackgroundColor;
+            $cell.style.color = styleByNumber.get(grid[i][j]).color || defaultCellTextColor;
         }
       }
 }
+
 let onkeydown = (event) => {
     const keyName = event.key
     switch(keyName) {
@@ -88,8 +91,14 @@ let onkeydown = (event) => {
         case 'ArrowDown': moveDown(); break;
         case 'ArrowLeft': moveLeft(); break;
         case 'ArrowRight': moveRight(); break;
-    }      
+    }
+    if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
+    addNewValueOfTwo();
+    renderGridState();         
+    }
+   
 }
+
 document.addEventListener('keydown', onkeydown)   
 
 
@@ -124,7 +133,7 @@ const moveUp = () => {
             
         }
     }
-   renderGridState();
+   
 }
 
 
@@ -154,11 +163,8 @@ const moveDown = () => {
                     }
                 }
             }
-            
         }
      }
-      
-    renderGridState();
 }
 
 const moveRight = () => {
@@ -189,8 +195,6 @@ const moveRight = () => {
             
         }
      }
-      
-    renderGridState();
 }
 
 const moveLeft = () => {
@@ -221,11 +225,12 @@ const moveLeft = () => {
             
         }
      }
-      
-    renderGridState();
 }
 
+
+const  reloadGame = () => {
+
+}
 generateGrid();
 initGame();
-renderGridState();
 
