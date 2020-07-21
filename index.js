@@ -238,7 +238,7 @@ const moveLeft = () => {
 }
 
 
-const  renderscore = () => document.getElementById('p-number').innerHTML= score;
+const  renderscore = () => document.getElementById('digital-score').innerHTML= score;
 generateGrid();
 initGame();
 
