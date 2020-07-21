@@ -39,7 +39,9 @@ const generateGrid = () => {
 }
 
 const initGame = () => {
-    grid = Array.from(Array(gridSize), () => new Array(gridSize))
+    grid = Array.from(Array(gridSize), () => new Array(gridSize));
+    score = 0;
+   renderscore()
 
     const point1 = generateRandomCordinates();
     grid[point1.x][point1.y] = 2;
@@ -48,9 +50,18 @@ const initGame = () => {
     while(JSON.stringify(point1) === JSON.stringify(point2)){
         point2 = generateRandomCordinates();
     }
-    grid[point2.x][point2.y] = 2;
-
+     grid[point2.x][point2.y] = 2;
+    // grid[0][0] = 2;
+    // grid[0][1] = 8;
+    // grid[0][2] = 16;
+    // grid[1][0] = 2;
+    // grid[1][1] = 16;
+    // grid[1][2] = 4;
+    // grid[2][0] = 2;
+    // grid[2][1] = 8;
+    // grid[2][2] = 2;
     renderGridState();
+   
   
 };
 
@@ -59,17 +70,29 @@ const generateRandomCordinates = () => {
     let y = randomIntFromInterval(0, gridSize - 1);  
     return {x : x, y: y};
 }
-
-const addNewValueOfTwo = () => {
-    let point = generateRandomCordinates();
-    while(grid[point.x][point.y]) {
-        point = generateRandomCordinates();
+const getEmptycells  =() => {
+    const array = [];
+    for(let i = 0 ; i < gridSize; i++ ) {
+        for(let j = 0 ; j< gridSize; j++ ) {
+            if(!grid[i][j]) {
+                array.push({x: i, y:j});
+            }
+        
+        }
     }
-    grid[point.x][point.y] = 2;
+    return array;
+} 
+const addNewValueOfTwo = () => {
+    const emptyCells = getEmptycells();
+    const newPoint = emptyCells[randomIntFromInterval(0, emptyCells.length)]
+    if(newPoint) {
+        grid[newPoint.x][newPoint.y] = 2;
+    }
 }
 
+// generate an integer between [min;max[
 const randomIntFromInterval = (min, max) => {  
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 
