@@ -3,6 +3,7 @@ let gridSize = 3;
 let grid;
 let isGameOver = false;
 let isWon = false;
+let score = 0;
 const defaultCellBackgroundColor = '#cec1b4';
 const defaultCellTextColor = '#cec1b4';
 const styleByNumber = new Map([
@@ -113,6 +114,8 @@ const moveUp = () => {
                 for (let k = i - 1; k >= f ; k--){   // chercher le nombre similaire en haut de la meme colonne, en partant de la case juste au dessus du nombre actuel
                     if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire au dessus
                         grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        score += grid[k][j];
+                        renderscore();
                         f = k +1                     //          la valeur trouveé n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'il a bougé
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
@@ -146,6 +149,8 @@ const moveDown = () => {
                 for (let k = i + 1; k <= f ; k++){   // chercher le nombre similaire vers le haut de la meme colonne, en partant de la case juste en dessous du nombre actuel
                     if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire en dessous
                         grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        score += grid[k][j];
+                        renderscore();
                         f = k -1                     //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre courant à undefined vue qu'il a bougé
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
@@ -175,6 +180,8 @@ const moveRight = () => {
                 for (let k = j + 1; k <= f ; k++){   // chercher le nombre similaire vers la droite de la meme ligne, en partant de la case juste à droite du nombre actuel
                     if (grid[i][j] === grid[i][k]){  // Cas 01:  le cas où on trouve un nombre similaire à droite
                         grid[i][k] =  grid[i][k]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        score += grid[i][k];
+                        renderscore();
                         f = k - 1;                   //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'elle a bougé
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
@@ -205,6 +212,8 @@ const moveLeft = () => {
                 for (let k = j - 1; k >= f ; k--){   // chercher le nombre similaire vers la gauche de la meme ligne, en partant de la case juste à gauche du nombre actuel
                     if (grid[i][j] === grid[i][k]){  // Cas 01:  le cas où on trouve un nombre similaire à gauche
                         grid[i][k] =  grid[i][k]* 2; //          multiplier la valeur du nombre similaire trouvé
+                        score += grid[i][k];
+                        renderscore();
                         f = k + 1;                   //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'elle a bougé
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
@@ -217,7 +226,8 @@ const moveLeft = () => {
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seule action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées à gauche mais aucun nombre (similaire ou pas) n'a été trouvé
-                        grid[i][k] = grid[i][j];     //         basculer vers la gauche le nombre actuel jusqu'à la dernière case possible (plus petit indice possible)
+                        grid[i][k] = grid[i][j];
+                             //         basculer vers la gauche le nombre actuel jusqu'à la dernière case possible (plus petit indice possible)
                         grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
                     }
                 }
@@ -228,9 +238,7 @@ const moveLeft = () => {
 }
 
 
-const  reloadGame = () => {
-
-}
+const  renderscore = () => document.getElementById('digital-score').innerHTML= score;
 generateGrid();
 initGame();
 
