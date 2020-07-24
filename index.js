@@ -1,7 +1,6 @@
 
-let gridSize = 3;
+let gridSize = 4;
 let grid;
-let isGameOver = false;
 let isWon = false;
 let score = 0;
 const defaultCellBackgroundColor = '#cec1b4';
@@ -51,15 +50,15 @@ const initGame = () => {
         point2 = generateRandomCordinates();
     }
      grid[point2.x][point2.y] = 2;
-    // grid[0][0] = 2;
-    // grid[0][1] = 8;
+    // grid[0][0] = 2; 
+    // grid[0][1] = 32;
     // grid[0][2] = 16;
-    // grid[1][0] = 2;
-    // grid[1][1] = 16;
+    // grid[1][0] = 32;
+    // grid[1][1] = 8;
     // grid[1][2] = 4;
-    // grid[2][0] = 2;
+    // grid[2][0] = 64;
     // grid[2][1] = 8;
-    // grid[2][2] = 2;
+    // grid[2][2] = 64;
     renderGridState();
    
   
@@ -111,18 +110,22 @@ const renderGridState = () => {
 let onkeydown = (event) => {
     const keyName = event.key
     switch(keyName) {
-        case 'ArrowUp': moveUp(); break;
-        case 'ArrowDown': moveDown(); break;
-        case 'ArrowLeft': moveLeft(); break;
-        case 'ArrowRight': moveRight(); break;
+            case 'ArrowUp': moveUp(); break;
+            case 'ArrowDown': moveDown(); break;
+            case 'ArrowLeft': moveLeft(); break;
+            case 'ArrowRight': moveRight(); break;
     }
     if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
-    addNewValueOfTwo();
-    renderGridState();         
+        addNewValueOfTwo();
+        renderGridState();         
     }
-   
+    if(isGameOver()) {
+     document.getElementById("game-over").style.visibility = "visible";
+    }
+    
 }
 
+// Ecouter un click de clavier
 document.addEventListener('keydown', onkeydown)   
 
 
@@ -262,6 +265,29 @@ const moveLeft = () => {
 
 
 const  renderscore = () => document.getElementById('digital-score').innerHTML= score;
+
+const tryAgain = () => {
+    initGame();
+    document.getElementById("game-over").style.visibility = "hidden";
+}
+
+const isGameOver = () => {
+    for(let i = 0; i< gridSize; i++){
+        for (let j = 0 ; j<gridSize; j++){
+            
+            if(
+                 !grid[i][j]                || 
+                 (i+1 <gridSize && grid[i][j] === grid[i+1][j] )    ||
+                 (i-1 >= 0 && grid[i][j] === grid[i-1][j])    || 
+                 grid[i][j] === grid [i][j+1]   || 
+                 grid[i][   j] === grid[i][j-1]
+                 ){
+                return false;
+            }
+        }  
+    }    
+    return true;
+}
 generateGrid();
 initGame();
 
