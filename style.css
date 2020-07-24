@@ -7,8 +7,8 @@ body {
     border-radius: 5px;
     padding-top: 0px;
     border: 2px solid hsl(28, 7%, 54%);
+    position: relative;
    
-
 
 }
 
@@ -96,6 +96,48 @@ align-items: center;
 
 #score-replay div{
     background-color: #bbada0;
+}
+
+#game-over {
+    background:rgb(242, 237, 227, 0.6);
+    position:absolute;
+    padding-top: 0px;
+    border-radius: 5px;
+    height:100%;
+    width:100%;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    visibility: hidden;
+}
+
+#game-over p:nth-child(1) {
+    font-size: 25px;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    color: rgb(88, 81, 75);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0px;
+    visibility: ;
+
+}
+
+#game-over p:nth-child(2){
+    border: 2px solid #756555;
+    border-radius: 5px;
+    background-color: #756555;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+#game-over p:nth-child(2):hover{
+    background-color: hsl(29, 34%, 47%);
+    border-color:hsl(29, 34%, 47%);
+    
 }
 
 
