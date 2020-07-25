@@ -3,7 +3,7 @@
 <head>
     <title>game</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-
+    <script type="text/javascript" src="lib/anime.min.js"></script>
 </head>
 <body>
     <div id="game-board">
@@ -20,13 +20,13 @@
             
         </div>
         <div id="grid">
-            <div id = "game-over" >
-                <p id=""> GAME OVER !</p> 
-                <p onclick =" tryAgain(this)" id="try-again"> Try again </p>
+            <div id = "game-result" >
+                <p> GAME OVER !</p> 
+                <p onclick =" initGame(this)" id="try-again"> Try again </p>
             </div>
         </div>
     </div>
-     <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="index.js"></script>
 
 </body>
 </html>

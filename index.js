@@ -1,8 +1,11 @@
 
-let gridSize = 4;
+ console.log('anime.version', anime);
+
+let gridSize = 8;
 let grid;
-let isWon = false;
 let score = 0;
+let valueToWin = 2048;
+
 const defaultCellBackgroundColor = '#cec1b4';
 const defaultCellTextColor = '#cec1b4';
 const styleByNumber = new Map([
@@ -38,28 +41,37 @@ const generateGrid = () => {
 }
 
 const initGame = () => {
-    grid = Array.from(Array(gridSize), () => new Array(gridSize));
+    document.getElementById("game-result").style.visibility = "hidden";
     score = 0;
-   renderscore()
-
+    renderscore();
+  
+    grid = Array.from(Array(gridSize), () => new Array(gridSize));
     const point1 = generateRandomCordinates();
-    grid[point1.x][point1.y] = 2;
-
+   // grid[point1.x][point1.y] = 2;
     let point2 = generateRandomCordinates();
     while(JSON.stringify(point1) === JSON.stringify(point2)){
         point2 = generateRandomCordinates();
     }
-     grid[point2.x][point2.y] = 2;
-    // grid[0][0] = 2; 
-    // grid[0][1] = 32;
-    // grid[0][2] = 16;
-    // grid[1][0] = 32;
-    // grid[1][1] = 8;
-    // grid[1][2] = 4;
-    // grid[2][0] = 64;
-    // grid[2][1] = 8;
-    // grid[2][2] = 64;
+     //grid[point2.x][point2.y] = 2;
+    grid[0][0] = 2; 
+    grid[0][1] = 1024;
+    grid[0][2] = 16;
+    grid[1][0] = 32;
+    grid[1][1] = 1024;
+    grid[1][2] = 4;
+    grid[2][0] = 64;
+    grid[2][1] = 8;
+    grid[2][2] = 64;
     renderGridState();
+
+    anime({
+        targets: '.grid-data',
+        scale: [
+          {value: .1, easing: 'easeOutSine', duration: 500},
+          {value: 1, easing: 'easeInOutQuad', duration: 1200}
+        ],
+        delay: anime.stagger(0, {grid: [gridSize, gridSize], from: 'center'})
+      });
    
   
 };
@@ -108,21 +120,32 @@ const renderGridState = () => {
 }
 
 let onkeydown = (event) => {
-    const keyName = event.key
-    switch(keyName) {
-            case 'ArrowUp': moveUp(); break;
-            case 'ArrowDown': moveDown(); break;
-            case 'ArrowLeft': moveLeft(); break;
-            case 'ArrowRight': moveRight(); break;
+
+    if(!isGameOver() && !isWon())  {
+        const keyName = event.key
+        switch(keyName) {
+                case 'ArrowUp': moveUp(); break;
+                case 'ArrowDown': moveDown(); break;
+                case 'ArrowLeft': moveLeft(); break;
+                case 'ArrowRight': moveRight(); break;
+        }
+        if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
+            addNewValueOfTwo();
+            renderGridState(); 
+
+        }
+        if(isGameOver()) {
+        document.getElementById("game-result").style.visibility = "visible";
+        }
+
+        if(isWon){
+            let $gameResult = document.getElementById("game-result").querySelectorAll("p");
+            $gameResult[0].innerHTML = "you win !";
+            document.getElementById("game-result").style.visibility = "visible";
+            document.getElementById("game-result").style.backgroundColor = "#e6d17d";        
+        }
     }
-    if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
-        addNewValueOfTwo();
-        renderGridState();         
-    }
-    if(isGameOver()) {
-     document.getElementById("game-over").style.visibility = "visible";
-    }
-    
+   
 }
 
 // Ecouter un click de clavier
@@ -266,15 +289,11 @@ const moveLeft = () => {
 
 const  renderscore = () => document.getElementById('digital-score').innerHTML= score;
 
-const tryAgain = () => {
-    initGame();
-    document.getElementById("game-over").style.visibility = "hidden";
-}
+
 
 const isGameOver = () => {
     for(let i = 0; i< gridSize; i++){
-        for (let j = 0 ; j<gridSize; j++){
-            
+        for (let j = 0 ; j<gridSize; j++){   
             if(
                  !grid[i][j]                || 
                  (i+1 <gridSize && grid[i][j] === grid[i+1][j] )    ||
@@ -288,6 +307,17 @@ const isGameOver = () => {
     }    
     return true;
 }
+
+const isWon = () =>{
+    for (let i = 0; i < gridSize; i++){
+        for (let j = 0; j <gridSize; j++){
+            if(grid[i][j] === valueToWin){
+                return true;
+            }
+        }
+    }
+    return false;
+};
 generateGrid();
 initGame();
 
