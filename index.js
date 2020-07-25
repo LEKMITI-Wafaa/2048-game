@@ -1,8 +1,13 @@
 
-let gridSize = 4;
+ console.log('anime.version', anime);
+
+let gridSize = 3;
 let grid;
-let isWon = false;
 let score = 0;
+// let string = document.getElementById("game-over").querySelectorAll("p");
+// let string2 = [...string];
+// string2[0].innerHTML = "you win";
+// console.log(string2[0]);
 const defaultCellBackgroundColor = '#cec1b4';
 const defaultCellTextColor = '#cec1b4';
 const styleByNumber = new Map([
@@ -38,28 +43,38 @@ const generateGrid = () => {
 }
 
 const initGame = () => {
+    
     grid = Array.from(Array(gridSize), () => new Array(gridSize));
     score = 0;
    renderscore()
 
     const point1 = generateRandomCordinates();
-    grid[point1.x][point1.y] = 2;
+   // grid[point1.x][point1.y] = 2;
 
     let point2 = generateRandomCordinates();
     while(JSON.stringify(point1) === JSON.stringify(point2)){
         point2 = generateRandomCordinates();
     }
-     grid[point2.x][point2.y] = 2;
-    // grid[0][0] = 2; 
-    // grid[0][1] = 32;
-    // grid[0][2] = 16;
-    // grid[1][0] = 32;
-    // grid[1][1] = 8;
-    // grid[1][2] = 4;
-    // grid[2][0] = 64;
-    // grid[2][1] = 8;
-    // grid[2][2] = 64;
+     //grid[point2.x][point2.y] = 2;
+    grid[0][0] = 2; 
+    grid[0][1] = 2048;
+    grid[0][2] = 16;
+    grid[1][0] = 32;
+    grid[1][1] = 8;
+    grid[1][2] = 4;
+    grid[2][0] = 64;
+    grid[2][1] = 8;
+    grid[2][2] = 64;
+  
     renderGridState();
+    /*anime({
+        targets: '.grid-data',
+        scale: [
+          {value: .1, easing: 'easeOutSine', duration: 500},
+          {value: 1, easing: 'easeInOutQuad', duration: 1200}
+        ],
+        delay: anime.stagger(0, {grid: [gridSize, gridSize], from: 'center'})
+      });*/
    
   
 };
@@ -117,10 +132,18 @@ let onkeydown = (event) => {
     }
     if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
         addNewValueOfTwo();
-        renderGridState();         
+        renderGridState(); 
+
     }
     if(isGameOver()) {
      document.getElementById("game-over").style.visibility = "visible";
+    }
+
+
+    if(isWon){
+        let win = document.getElementById("game-over").querySelectorAll("p");
+        win = [...win][0].innerHTML = "win";
+        document.getElementById("game-over").style.visibility = "visible";
     }
     
 }
@@ -288,6 +311,17 @@ const isGameOver = () => {
     }    
     return true;
 }
+
+const isWon = () =>{
+    for (let i = 0; i < gridSize; i++){
+        for (let j = 0; j <gridSize; j++){
+            if(grid[i][j] === 2048){
+                true;
+            }
+        }
+    }
+    return false;
+};
 generateGrid();
 initGame();
 
