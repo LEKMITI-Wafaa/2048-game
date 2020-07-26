@@ -1,12 +1,9 @@
 
- console.log('anime.version', anime);
-
-
-let gridSize = 8;
+let gridSize = 3;
 let grid;
 let score = 0;
 let valueToWin = 2048;
-
+const sourceToTarget = new Map();
 const defaultCellBackgroundColor = '#cec1b4';
 const defaultCellTextColor = '#cec1b4';
 const styleByNumber = new Map([
@@ -42,30 +39,28 @@ const generateGrid = () => {
 }
 
 const initGame = () => {
-
     document.getElementById("game-result").style.visibility = "hidden";
     score = 0;
     renderscore();
   
     grid = Array.from(Array(gridSize), () => new Array(gridSize));
     const point1 = generateRandomCordinates();
-   // grid[point1.x][point1.y] = 2;
-
+   //  grid[point1.x][point1.y] = 2;
     let point2 = generateRandomCordinates();
     while(JSON.stringify(point1) === JSON.stringify(point2)){
         point2 = generateRandomCordinates();
     }
-     //grid[point2.x][point2.y] = 2;
-    grid[0][0] = 2; 
 
-    grid[0][1] = 1024;
-    grid[0][2] = 16;
-    grid[1][0] = 32;
-    grid[1][1] = 1024;
-    grid[1][2] = 4;
-    grid[2][0] = 64;
-    grid[2][1] = 8;
-    grid[2][2] = 64;
+   //   grid[point2.x][point2.y] = 2;
+     grid[0][0] = 4; 
+    // grid[0][1] = 1024;
+     grid[0][3] = 4;
+    // grid[1][0] = 32;
+    // grid[1][1] = 1024;
+    // grid[1][2] = 4;
+     grid[2][0] = 2;
+    // grid[2][1] = 8;
+    // grid[2][2] = 64;
 
     renderGridState();
 
@@ -76,7 +71,6 @@ const initGame = () => {
           {value: 1, easing: 'easeInOutQuad', duration: 1200}
         ],
         delay: anime.stagger(0, {grid: [gridSize, gridSize], from: 'center'})
-
       });
    
   
@@ -114,6 +108,8 @@ const randomIntFromInterval = (min, max) => {
 
 
 const renderGridState = () => {
+    animateGrid();
+
       for (let i = 0; i < gridSize ; i++){
         const $row = $grid.querySelectorAll(".grid-row")[i];
         for (let j = 0; j < gridSize; j++){
@@ -123,36 +119,90 @@ const renderGridState = () => {
             $cell.style.color = styleByNumber.get(grid[i][j]).color || defaultCellTextColor;
         }
       }
+
+}
+
+const createFictiveCell = ($cellSource, source, positionSource) => {
+
+    const $fictiveCell = document.createElement("div");
+    $fictiveCell.classList.add("fictive-grid-data");
+    $fictiveCell.id = `fictive-grid-data-${source.x}-${source.y}`;
+    $fictiveCell.style.top = `${positionSource.top}px`;
+    $fictiveCell.style.left = `${positionSource.left}px`;
+    console.log($cellSource.innerHTML);
+    $fictiveCell.innerHTML= $cellSource.innerHTML;
+    $fictiveCell.style.backgroundColor= $cellSource.style.backgroundColor;
+    $fictiveCell.style.color= $cellSource.style.color;
+    return  $fictiveCell;
+}
+
+const animateGrid = () => {
+    sourceToTarget.forEach((target, source) => {
+        const $rowSource = document.querySelectorAll(".grid-row")[source.x]; 
+        const $cellSource = $rowSource.querySelectorAll(".grid-data")[source.y];
+        const positionSource = $cellSource.getBoundingClientRect();
+
+        const $rowTarget = document.querySelectorAll(".grid-row")[target.x]; 
+        const $cellTarget = $rowTarget.querySelectorAll(".grid-data")[target.y];
+        const positionTarget= $cellTarget.getBoundingClientRect();
+
+
+
+        const translation = {
+            x: positionTarget.top - positionSource.top,
+            y: positionTarget.left - positionSource.left
+        };
+        const $body = document.querySelector("body");
+        $fictiveCell = createFictiveCell($cellSource, source, positionSource);
+        $body.append($fictiveCell);
+
+        const animationData =  getAnimationdData(target.direction, source, translation, $cellSource);
+        anime(animationData);
+    })  
+}
+
+const getAnimationdData = ( targetDirection, source, translation) => {
+    const animationData = {
+        targets: `#fictive-grid-data-${source.x}-${source.y}`, 
+        duration: 700,
+        complete: () => {
+            const $fictiveCell = document.getElementById(`fictive-grid-data-${source.x}-${source.y}`);
+            $fictiveCell.parentNode.removeChild($fictiveCell);
+        }
+    };
+    const property = (targetDirection ===  'UP' || targetDirection === 'DOWN') ? 'translateY' : 'translateX';
+    animationData[property] = (targetDirection ===  'UP' || targetDirection === 'DOWN') ? translation.x : translation.y;
+    return animationData;
 }
 
 let onkeydown = (event) => {
 
-
     if(!isGameOver() && !isWon())  {
         const keyName = event.key
+        sourceToTarget.clear();
         switch(keyName) {
                 case 'ArrowUp': moveUp(); break;
                 case 'ArrowDown': moveDown(); break;
                 case 'ArrowLeft': moveLeft(); break;
                 case 'ArrowRight': moveRight(); break;
         }
+        renderscore();
         if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
             addNewValueOfTwo();
             renderGridState(); 
-
         }
         if(isGameOver()) {
         document.getElementById("game-result").style.visibility = "visible";
         }
 
-        if(isWon){
-            let $gameResult = document.getElementById("game-result").querySelectorAll("p");
-            $gameResult[0].innerHTML = "you win !";
-            document.getElementById("game-result").style.visibility = "visible";
-            document.getElementById("game-result").style.backgroundColor = "#e6d17d";        
+        if(isWon()){
+            let $gameResult = document.getElementById("game-result");
+            $gameResult.querySelectorAll("p")[0].innerHTML = "you win !";
+            $gameResult.style.visibility = "visible";
+            $gameResult.style.backgroundColor = "#e6d17d";        
+            $gameResult.style.color = "#ffffff";        
         }
     }
-
 }
 
 // Ecouter un click de clavier
@@ -171,21 +221,23 @@ const moveUp = () => {
                     if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire au dessus
                         grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
                         score += grid[k][j];
-                        renderscore();
                         f = k +1                     //          la valeur trouveé n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'il a bougé
+                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'UP'});
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
                     } else if (grid[k][j]){          // Cas 01: le cas où on trouve au dessus un nombre non-similaire mais qui est défini 
                         grid[k+1][j] = grid[i][j]    //         remonte le nombre actuel juste en dessous du nombre non-similaire trouvé
                         if(k+1 !== i){               //         traiter le cas où le nombre actuel ne monte pas (car le nombre non-similaire trouvé est juste en dessus), dans ce cas il ne faut pasle mettre à undefined
                             grid[i][j] = undefined;  //         si le nombre actuel monte ,  mettre sa place précédente (avant qu'il ne bouge) à undefined  
+                            sourceToTarget.set({x:i, y:j} , {x: k+1, y: j, direction: 'UP'});
                         }
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas ou nous avons parcourru toute les cases concernées en dessus mais aucun nombre (similaire ou pas) n'a été trouvé
                         grid[k][j] = grid[i][j];     //         monter le nombre actuel vers la dernière case concernée
                         grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'UP'});
                     }
                 }
             }
@@ -206,21 +258,23 @@ const moveDown = () => {
                     if (grid[i][j] === grid[k][j]){  // Cas 01:  le cas où on trouve un nombre similaire en dessous
                         grid[k][j] =  grid[k][j]* 2; //          multiplier la valeur du nombre similaire trouvé
                         score += grid[k][j];
-                        renderscore();
                         f = k -1                     //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre courant à undefined vue qu'il a bougé
+                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'DOWN'});
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
                     } else if (grid[k][j]){          // Cas 01: le cas où on  trouve en dessous un nombre non-similaire mais qui est défini 
                         grid[k-1][j] = grid[i][j]    //         descends le nombre actuel juste au dessus du nombre non-similaire trouvé
                         if(k-1 !== i){               //         traiter le cas où le nombre actuel ne descend pas (car le nombre non-similaire trouvé est juste en dessus), dans ce cas il ne faut pas le mettre à undefined
                             grid[i][j] = undefined;  //         si le nombre actuel descend , le mettre à undefined  
+                            sourceToTarget.set({x:i, y:j} , {x: k-1, y: j, direction: 'DOWN'});
                         }
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seul action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées en dessous mais aucun nombre (similaire ou pas) n'a été trouvé
                         grid[k][j] = grid[i][j];     //         descendre le nombre actuel vers la dernière case concernée (de la boucle)
                         grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'DOWN'});
                     }
                 }
             }
@@ -237,21 +291,23 @@ const moveRight = () => {
                     if (grid[i][j] === grid[i][k]){  // Cas 01:  le cas où on trouve un nombre similaire à droite
                         grid[i][k] =  grid[i][k]* 2; //          multiplier la valeur du nombre similaire trouvé
                         score += grid[i][k];
-                        renderscore();
                         f = k - 1;                   //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'elle a bougé
+                        sourceToTarget.set({x:i, y:j} , {x: i, y: k, direction: 'RIGHT'});
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
                     } else if (grid[i][k]){          // Cas 01: le cas où on  trouve à droite un nombre non-similaire mais qui est défini 
                         grid[i][k-1] = grid[i][j]    //         bascule vers la droite le nombre actuel juste avant le nombre non-similaire trouvé
                         if(k-1 !== j){               //         traiter le cas où le nombre actuel ne bascule pas vers la droite  (car le nombre non-similaire trouvé le suis directement à droite), dans ce cas il ne faut pas le mettre à undefined
                             grid[i][j] = undefined;  //         si le nombre actuel bascule vers la droite : le mettre à undefined  
+                            sourceToTarget.set({x:i, y:j} , {x: i, y: k-1, direction: 'RIGHT'});
                         }
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seule action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées à droite mais aucun nombre (similaire ou pas) n'a été trouvé
                         grid[i][k] = grid[i][j];     //         basculer vers la droite le nombre actuel jusqu'à la dernière case possible (plus petit indice possible)
-                        grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                        sourceToTarget.set({x:i, y:j} , {x: i, y: k, direction: 'RIGHT'});
+                        grid[i][j] = undefined;      //         mettre le nombre actuel à undefined                    
                     }
                 }
             }
@@ -269,9 +325,9 @@ const moveLeft = () => {
                     if (grid[i][j] === grid[i][k]){  // Cas 01:  le cas où on trouve un nombre similaire à gauche
                         grid[i][k] =  grid[i][k]* 2; //          multiplier la valeur du nombre similaire trouvé
                         score += grid[i][k];
-                        renderscore();
                         f = k + 1;                   //          la valeur trouvée n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'elle a bougé
+                        sourceToTarget.set({x:i, y:j} , {x: i, y: k, direction: 'LEFT'});
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
                     } else if (grid[i][k]){          // Cas 01: le cas où on  trouve à gauche un nombre non-similaire mais qui est défini 
@@ -279,12 +335,14 @@ const moveLeft = () => {
                         if(k+1 !== j){               //         traiter le cas où le nombre actuel ne bascule pas vers la gauche  (car le nombre non-similaire trouvé le suis directement à gauche), dans ce cas il ne faut pas le mettre à undefined
                             grid[i][j] = undefined;  //         si le nombre actuel bascule vers la droite : le mettre à undefined  
                         }
+                        sourceToTarget.set({x:i, y:j} , {x: i, y: k+1, direction: 'LEFT'});
                         break;                       //         on intrompt la boucle du 'k' car une décision a été prise pour le nombre actuel (pour chaque valeur on fait une seule action à la fois)
                     }
                     if (k === f){                    // Cas 03: le cas où nous avons parcourru toutes les cases concernées à gauche mais aucun nombre (similaire ou pas) n'a été trouvé
                         grid[i][k] = grid[i][j];
                              //         basculer vers la gauche le nombre actuel jusqu'à la dernière case possible (plus petit indice possible)
                         grid[i][j] = undefined;      //         mettre le nombre actuel à undefined
+                        sourceToTarget.set({x:i, y:j} , {x: i, y: k, direction: 'LEFT'});
                     }
                 }
             }
@@ -318,9 +376,9 @@ const isGameOver = () => {
 const isWon = () =>{
     for (let i = 0; i < gridSize; i++){
         for (let j = 0; j <gridSize; j++){
-
             if(grid[i][j] === valueToWin){
-                return true;            }
+                return true;
+            }
         }
     }
     return false;

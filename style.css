@@ -35,6 +35,21 @@ body {
     font-size: 20px;
 }
 
+.fictive-grid-data{
+    position: absolute;
+    width: 3em;
+    height:3em;
+    border: 2px solid hsl(28, 7%, 54%);
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;    
+
+}
+
 #game-board {
 margin-top: 50px auto;
 display: flex;
