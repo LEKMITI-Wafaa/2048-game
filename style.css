@@ -48,7 +48,9 @@ align-items: center;
     display: flex;
     text-align: center;
     justify-content: space-between;
-    width: 350px;
+    width: 400px;
+    margin-top: 100px;
+   
     
 }
 #head-grid  h1{
@@ -98,7 +100,7 @@ align-items: center;
     background-color: #bbada0;
 }
 
-#game-over {
+#game-result {
     background:rgb(242, 237, 227, 0.6);
     position:absolute;
     padding-top: 0px;
@@ -112,29 +114,30 @@ align-items: center;
     align-items: center;
     align-content: center;
     visibility: hidden;
+    z-index: 1;
 }
 
-#game-over p:nth-child(1) {
-    font-size: 25px;
+#game-result p:nth-child(1) {
+    font-size: 150%;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     color: rgb(88, 81, 75);
     text-align: center;
     font-weight: bold;
     margin-bottom: 0px;
-    visibility: hidden;
 
 }
 
-#game-over p:nth-child(2){
+#game-result p:nth-child(2){
     border: 2px solid #756555;
     border-radius: 5px;
     background-color: #756555;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     color: white;
     padding: 10px;
+
     cursor: pointer;
 }
-#game-over p:nth-child(2):hover{
+#game-result p:nth-child(2):hover{
     background-color: hsl(29, 34%, 47%);
     border-color:hsl(29, 34%, 47%);
     
