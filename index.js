@@ -1,5 +1,5 @@
 
-let gridSize = 3;
+let gridSize = 5;
 let grid;
 let score = 0;
 let valueToWin = 2048;
@@ -22,7 +22,7 @@ const styleByNumber = new Map([
 ]);
 
 
-const $grid = document.getElementById('grid');
+const $grid = document.getElementById('grid-body');
 
 
 const generateGrid = () => {
@@ -45,30 +45,22 @@ const initGame = () => {
   
     grid = Array.from(Array(gridSize), () => new Array(gridSize));
     const point1 = generateRandomCordinates();
-   //  grid[point1.x][point1.y] = 2;
+    grid[point1.x][point1.y] = 2;
     let point2 = generateRandomCordinates();
     while(JSON.stringify(point1) === JSON.stringify(point2)){
         point2 = generateRandomCordinates();
     }
 
-   //   grid[point2.x][point2.y] = 2;
-     grid[0][0] = 4; 
-    // grid[0][1] = 1024;
-     grid[0][3] = 4;
-    // grid[1][0] = 32;
-    // grid[1][1] = 1024;
-    // grid[1][2] = 4;
-     grid[2][0] = 2;
-    // grid[2][1] = 8;
-    // grid[2][2] = 64;
+   grid[point2.x][point2.y] = 2;
+
 
     renderGridState();
 
     anime({
         targets: '.grid-data',
         scale: [
-          {value: .1, easing: 'easeOutSine', duration: 500},
-          {value: 1, easing: 'easeInOutQuad', duration: 1200}
+          {value: .1, easing: 'easeOutSine', duration: 300},
+          {value: 1, easing: 'easeInOutQuad', duration: 300}
         ],
         delay: anime.stagger(0, {grid: [gridSize, gridSize], from: 'center'})
       });
@@ -164,7 +156,7 @@ const animateGrid = () => {
 const getAnimationdData = ( targetDirection, source, translation) => {
     const animationData = {
         targets: `#fictive-grid-data-${source.x}-${source.y}`, 
-        duration: 700,
+        duration: 500,
         complete: () => {
             const $fictiveCell = document.getElementById(`fictive-grid-data-${source.x}-${source.y}`);
             $fictiveCell.parentNode.removeChild($fictiveCell);
@@ -352,7 +344,7 @@ const moveLeft = () => {
 }
 
 
-const  renderscore = () => document.getElementById('digital-score').innerHTML= score;
+const  renderscore = () => document.getElementById('current-score').innerHTML= score;
 
 
 

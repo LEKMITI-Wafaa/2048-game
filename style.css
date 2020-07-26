@@ -1,16 +1,58 @@
 
 body {
     background-color: #faf8ef;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
 }
+
+#game-body {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+    border: 1px solid #c7c5c2;
+    padding: 20px 40px;
+
+}
+
+#how-to-play {
+  width: 200px;
+  color: #776e65;
+}
+
 #grid {
+display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
+justify-content: space-around;
+align-items: center;
+margin-left: 50px;
+}
+
+#grid-header {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    width: 400px;
+}
+#grid-header  h1{
+   color: hsl(28, 9%, 39%);
+   font-size: 40px;
+}
+   
+
+#grid-body{
     background-color: hsl(28, 7%, 54%);
     border-radius: 5px;
     padding-top: 0px;
     border: 2px solid hsl(28, 7%, 54%);
     position: relative;
+
    
 
 }
+
 
 .grid-row {
     display: flex;
@@ -22,8 +64,8 @@ body {
 
 
 .grid-data{
-    width: 3em;
-    height:3em;
+    width: 4em;
+    height:4em;
     background-color: #cec1b4;
     text-align: center;
     border-radius: 5px;
@@ -37,8 +79,8 @@ body {
 
 .fictive-grid-data{
     position: absolute;
-    width: 3em;
-    height:3em;
+    width: 4em;
+    height:4em;
     border: 2px solid hsl(28, 7%, 54%);
     font-weight: bold;
     font-size: 20px;
@@ -59,21 +101,6 @@ justify-content: space-around;
 align-items: center;
 }
 
-#head-grid {
-    display: flex;
-    text-align: center;
-    justify-content: space-between;
-    width: 400px;
-    margin-top: 100px;
-   
-    
-}
-#head-grid  h1{
-   color: hsl(28, 9%, 39%);
-   font-size: 40px;
-}
-   
-
 
 #img-replay {
     width: 35px;
@@ -83,7 +110,9 @@ align-items: center;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-
+}
+#img-replay:hover {
+    background-color: rgb(144, 122, 101, 0.7);
 }
 
 #score-replay {
@@ -91,19 +120,20 @@ align-items: center;
     align-items: center;
 
 }
-#score {
+.score {
     border-radius: 5px;
+    margin-left: 10px;
     font-size: 16px;
     font-weight: bolder;
 }
 
-#digital-score {
+.score-value{
     font-weight:bold ;
     color: #ffffff;
     margin: 5px;
 }
 
-#p-score {
+.score-label {
     font-weight:bold ;
     font-size: 20px;
     color: #eee4da;
@@ -157,6 +187,31 @@ align-items: center;
     border-color:hsl(29, 34%, 47%);
     
 }
+
+.img-2048 {
+width: 50px;
+height: 50x;
+}
+#grid-types {
+    margin-left: 50px;
+}
+.grid-type {
+    display: flex;
+    margin-top: 30px;
+}
+
+.grid-type div{
+    font-size: 30px;
+    color: white;
+    background-color:#e6b17c;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.grid-type div:hover{
+    background-color:#e2a66a;
+
+}
+
 
 
 

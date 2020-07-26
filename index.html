@@ -7,25 +7,62 @@
 </head>
 <body>
     <div id="game-board">   
-        <div id="head-grid">
-            <h1>2048</h1>
-            <div id="score-replay">
-                <div id="score">
-                    <p id="p-score">score</p>
-                    <p id="digital-score">0</p>
-                </div>
-                <img onclick ="initGame(this)" id = "img-replay" src="./ressources/replay.svg" alt="replay">
-    
+       
+        <div id="game-body">
+            <p id="how-to-play"><b>How to play:</b> Use the arrows on the keyboard to move the tiles.
+                 When two tiles with the same number touch each other, <b>they get merged!</b></p>
+            <div id="grid">
+                    <div id="grid-header">  
+                        <h1>2048</h1>
+                        <div id="score-replay">
+                            <div class="score">
+                                <p class="score-label">score</p>
+                                <p id= "current-score" class="score-value">0</p>
+                            </div>
+                            <div class="score">
+                                <p class="score-label">best score</p>
+                                <p id= "current-score" class="score-value">0</p>
+                            </div>
+                            <img onclick ="initGame(this)" id = "img-replay" src="./ressources/replay.svg" alt="replay">
+                        </div> 
+                    </div>
+                    <div id="grid-body">
+                        <div id = "game-result" >
+                            <p> GAME OVER !</p> 
+                            <p onclick =" initGame(this)" id="try-again"> Try again </p>
+                        </div>
+                    </div>
             </div>
             
-        </div>
-        <div id="grid">
+            <div id="grid-types">
+                <div class="grid-type">
+                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                    <div>3 x 3</div>
+                </div>
 
-            <div id = "game-result" >
-                <p> GAME OVER !</p> 
-                <p onclick =" initGame(this)" id="try-again"> Try again </p>
+                <div class="grid-type">
+                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                    <div>4 x 4</div>
+                </div>
+
+                <div class="grid-type">
+                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                    <div>5 x 5</div>
+                </div>
+
+                <div class="grid-type">
+                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                    <div>6 x 6</div>
+                </div>
+
+                <div class="grid-type">
+                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                    <div>8 x 8</div>
+                </div>
+
             </div>
         </div>
+       
     </div>
     <script type="text/javascript" src="index.js"></script>
 
