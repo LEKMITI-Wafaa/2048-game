@@ -192,12 +192,15 @@ align-items: center;
 width: 50px;
 height: 50x;
 }
+
 #grid-types {
     margin-left: 50px;
 }
 .grid-type {
     display: flex;
     margin-top: 30px;
+    cursor: pointer;
+
 }
 
 .grid-type div{
@@ -205,12 +208,12 @@ height: 50x;
     color: white;
     background-color:#e6b17c;
     padding: 10px 20px;
-    cursor: pointer;
 }
 .grid-type div:hover{
     background-color:#e2a66a;
 
-}
+
+    }
 
 
 

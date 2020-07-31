@@ -21,43 +21,38 @@
                             </div>
                             <div class="score">
                                 <p class="score-label">best score</p>
-                                <p id= "current-score" class="score-value">0</p>
+                                <p id= "best-score" class="score-value">0</p>
                             </div>
                             <img onclick ="initGame(this)" id = "img-replay" src="./ressources/replay.svg" alt="replay">
                         </div> 
                     </div>
                     <div id="grid-body">
-                        <div id = "game-result" >
+                        <div id = "game-result">
                             <p> GAME OVER !</p> 
-                            <p onclick =" initGame(this)" id="try-again"> Try again </p>
+                            <p onclick ="initGame(this)" id="try-again"> Try again </p>
                         </div>
                     </div>
             </div>
             
             <div id="grid-types">
-                <div class="grid-type">
-                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                <div class="grid-type" data-grid-size="3" onclick ="chooseGridSize(this)">
+                    <img class= "img-2048"  src="./ressources/2048.jpeg" alt="3x3"/>
                     <div>3 x 3</div>
                 </div>
 
-                <div class="grid-type">
-                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                <div class="grid-type" data-grid-size="4" onclick ="chooseGridSize(this)">
+                    <img class= "img-2048" src="./ressources/2048.jpeg" alt="4x4"/>
                     <div>4 x 4</div>
                 </div>
 
-                <div class="grid-type">
-                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                <div class="grid-type" data-grid-size="5" onclick ="chooseGridSize(this)">
+                    <img class= "img-2048" src="./ressources/2048.jpeg" alt="5x5"/>
                     <div>5 x 5</div>
                 </div>
 
-                <div class="grid-type">
-                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
+                <div class="grid-type" data-grid-size="6" onclick ="chooseGridSize(this)"> 
+                    <img class= "img-2048"  src="./ressources/2048.jpeg" alt="6x6"/>
                     <div>6 x 6</div>
-                </div>
-
-                <div class="grid-type">
-                    <img class= "img-2048" onclick ="initGame(this)" src="./ressources/2048.jpeg" alt="3x3"/>
-                    <div>8 x 8</div>
                 </div>
 
             </div>

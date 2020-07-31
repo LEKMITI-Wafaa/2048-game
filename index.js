@@ -1,8 +1,9 @@
 
-let gridSize = 5;
+let gridSize = 3;
 let grid;
 let score = 0;
 let valueToWin = 2048;
+let bestScore = localStorage.getItem('bestScore') || 0;
 const sourceToTarget = new Map();
 const defaultCellBackgroundColor = '#cec1b4';
 const defaultCellTextColor = '#cec1b4';
@@ -20,10 +21,12 @@ const styleByNumber = new Map([
     [2048, {backgroundColor:'#9a5315', color:'#f9f6f2'}],
     [undefined, {backgroundColor: defaultCellBackgroundColor, color: defaultCellTextColor}],
 ]);
-
-
 const $grid = document.getElementById('grid-body');
 
+const chooseGridSize = (event) => {
+    gridSize = parseInt(event.getAttribute('data-grid-size'));
+    initGame();  
+}
 
 const generateGrid = () => {
     for (let x = 0; x< gridSize; x++){
@@ -39,9 +42,11 @@ const generateGrid = () => {
 }
 
 const initGame = () => {
+    [].forEach.call(document.querySelectorAll('.grid-row'), (e) =>  e.parentNode.removeChild(e));
     document.getElementById("game-result").style.visibility = "hidden";
     score = 0;
     renderscore();
+    renderBestScore();
   
     grid = Array.from(Array(gridSize), () => new Array(gridSize));
     const point1 = generateRandomCordinates();
@@ -53,7 +58,7 @@ const initGame = () => {
 
    grid[point2.x][point2.y] = 2;
 
-
+    generateGrid();
     renderGridState();
 
     anime({
@@ -157,6 +162,7 @@ const getAnimationdData = ( targetDirection, source, translation) => {
     const animationData = {
         targets: `#fictive-grid-data-${source.x}-${source.y}`, 
         duration: 500,
+        easing: 'easeInOutExpo',
         complete: () => {
             const $fictiveCell = document.getElementById(`fictive-grid-data-${source.x}-${source.y}`);
             $fictiveCell.parentNode.removeChild($fictiveCell);
@@ -178,13 +184,21 @@ let onkeydown = (event) => {
                 case 'ArrowLeft': moveLeft(); break;
                 case 'ArrowRight': moveRight(); break;
         }
+
         renderscore();
+
+        bestScore = score > bestScore ? score : bestScore;
+        renderBestScore();
+        localStorage.setItem('bestScore', bestScore);
+
+
         if(['ArrowUp', 'ArrowDown','ArrowLeft', 'ArrowRight'].includes(keyName)) {
             addNewValueOfTwo();
             renderGridState(); 
         }
         if(isGameOver()) {
-        document.getElementById("game-result").style.visibility = "visible";
+            document.getElementById("game-result").style.visibility = "visible";
+        
         }
 
         if(isWon()){
@@ -192,15 +206,15 @@ let onkeydown = (event) => {
             $gameResult.querySelectorAll("p")[0].innerHTML = "you win !";
             $gameResult.style.visibility = "visible";
             $gameResult.style.backgroundColor = "#e6d17d";        
-            $gameResult.style.color = "#ffffff";        
+            $gameResult.style.color = "#ffffff";    
+            
+            
         }
     }
 }
 
 // Ecouter un click de clavier
 document.addEventListener('keydown', onkeydown)   
-
-
 
 
 const moveUp = () => {
@@ -215,7 +229,7 @@ const moveUp = () => {
                         score += grid[k][j];
                         f = k +1                     //          la valeur trouveé n'est plus concernée par la recherche. 
                         grid[i][j] = undefined;      //          mettre la valeur du nombre actuel à undefined vue qu'il a bougé
-                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'UP'});
+                        sourceToTarget.set({x:i, y:j} , {x: k, y: j, direction: 'UP'});                       
                         break;                       //          on intrompt la boucle du 'k' car une décision a été prise pour le nombre courant (pour chaque valeur on fait une seul action à la fois)
                    
                     } else if (grid[k][j]){          // Cas 01: le cas où on trouve au dessus un nombre non-similaire mais qui est défini 
@@ -346,7 +360,7 @@ const moveLeft = () => {
 
 const  renderscore = () => document.getElementById('current-score').innerHTML= score;
 
-
+const  renderBestScore= () => document.getElementById('best-score').innerHTML= bestScore;
 
 const isGameOver = () => {
     for(let i = 0; i< gridSize; i++){
@@ -375,6 +389,6 @@ const isWon = () =>{
     }
     return false;
 };
-generateGrid();
+
 initGame();
 
